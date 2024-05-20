@@ -1,0 +1,25 @@
+// 此文件表示一个约束，会使用工具根据此文件生成代码
+
+// 使用的语法版本
+syntax = "proto3";
+
+// 参数以 `;` 隔开，`.` 表示目录的位置，`service` 表示包名
+option go_package = ".;service";
+
+// 服务，服务中有方法使用 `rpc` 关键字开头
+// 方法名为 SayHello，该方法接受一个参数 `HelloRequest` 返回 `HelloResponse`
+service SayHello {
+  rpc SayHello(HelloRequest) returns (HelloResponse) {}
+}
+
+// message 中的参数值并不是赋值，而是表明该参数的位置
+// TODO 支持哪些类型
+message HelloRequest {
+  string requestName = 1;  // 1 表示位置
+  int64 age = 2;
+}
+
+message HelloResponse {
+  string responseMsg = 1;
+}
+
