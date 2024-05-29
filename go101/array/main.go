@@ -62,4 +62,23 @@ func main() {
 	}
 	fmt.Println(persons)
 
+	var array3 [100]int
+
+	for i, n3 := range array3 {
+		fmt.Println(i, n3)
+	}
+
+	for i, n3 := range &array3 {
+		fmt.Println(i, n3)
+	}
+
+	var array4 *[5]int
+	//p := &[5]int{1, 2, 3, 4, 5}
+	for i := range array4 {
+		fmt.Println(i)
+	}
+	fmt.Println()
+	fmt.Println(len(array4))
+	fmt.Println(cap(array4))
+
 }

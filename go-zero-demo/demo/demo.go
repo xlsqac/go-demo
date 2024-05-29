@@ -4,10 +4,10 @@ import (
 	"flag"
 	"fmt"
 	"github.com/zeromicro/go-zero/rest"
+	"xlsqac/go-zeor-demo/demo/internal/svc"
 
 	"xlsqac/go-zeor-demo/demo/internal/config"
 	"xlsqac/go-zeor-demo/demo/internal/handler"
-	"xlsqac/go-zeor-demo/demo/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
 )
