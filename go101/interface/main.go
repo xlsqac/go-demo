@@ -4,6 +4,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 )
@@ -33,13 +34,13 @@ type ReadWriterCloser = interface {
 
 type read struct{}
 
-func (r read) Read(b []byte) (n int, err error) {}
+func (r read) Read(b []byte) (n int, err error) { return }
 
-func (r read) Write(b []byte) (n int, err error) {}
+func (r read) Write(b []byte) (n int, err error) { return }
 
-func (r read) Close() error {}
+func (r read) Close() error { return errors.New("") }
 
-func (r read) Error() string {}
+func (r read) Error() string { return "" }
 
 // AnyByteSlice
 // 内嵌了一个近似类型
@@ -88,15 +89,15 @@ func (s S1) func3() {}
 func (s S1) func4() {}
 
 func main() {
-	b := Binary(200)
-	s := Stringer(b)
-	fmt.Println(s.String())
-
-	var any1 interface{}
-	s1 := any1.(Stringer)
-	for i := 0; i < 100; i++ {
-		fmt.Println(s1.String())
-	}
+	//b := Binary(200)
+	//s := Stringer(b)
+	//fmt.Println(s.String())
+	//
+	//var any1 interface{}
+	//s1 := any1.(Stringer)
+	//for i := 0; i < 100; i++ {
+	//	fmt.Println(s1.String())
+	//}
 
 	// 值包裹
 	// 类型S1 实现了 interface4，所以可以隐式转换
@@ -115,24 +116,41 @@ func main() {
 		fmt.Println(ok)
 	}
 	i = nil
-	var i1 interface{} = s2
-	var i2 interface3 = s2
+	var _ interface{} = s2
+	var _ interface3 = s2
 	// in3 实现了 in4，O(1), 编译器做过优化
-	var i3 interface3 = i
+	var _ interface3 = i
 
 	// 非基本接口类型无法用作接口值
-	var u1 Unsigned = int8(1)
-	var abs AnyByteSlice = []byte{1}
+	//var u1 Unsigned = int8(1)
+	//var abs AnyByteSlice = []byte{1}
 
 	// 多态，一个接口值通过包裹不同动态类型的动态值来表现出不同行为
 	// 调用一个接口值的方法时实际上将调用此接口值的动态值的方法
 	// i.func3() == s2.func3()
-	i.func3()
+	//i.func3()
 	s2.func3()
 	// fmt.Println()
 	// 如果没有多态，打印 int 和 string 就得实现两个函数
 	// PrintlnInt 和 PrintlnString
-	fmt.Println()
+	//fmt.Println()
 
 	// 反射
+	// 一个接口储存的动态类型信息可以被用来检视此接口值的动态值和操作此动态值所引用的值。
+	// 反射功能集中体现在 reflect 标准库中，Go 内置也有一些，这里只写内置的
+	// 类型断言 i.(T) i 接口值，T 类型名或类型字面表示
+	// 在表达式中 i 是断言值，T 是断言类型
+	var x interface{} = "123"
+
+	// 将一个接口值转换成一个非接口类型
+	//a, ok := x.(int)
+	//fmt.Println(ok, a)
+	// 当断言失败且只接收了一个结果时，会出现 panic
+	//a := x.(float64)
+	//fmt.Println(a)
+	// 断言失败但是接收了两个结果时，返回零值
+	b, ok := x.(bool)
+	fmt.Println(b, ok)
+	// 将一个接口值转换成另一个接口类型
+
 }
