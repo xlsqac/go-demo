@@ -88,6 +88,16 @@ type S1 struct{}
 func (s S1) func3() {}
 func (s S1) func4() {}
 
+type I interface {
+	m(int) bool
+}
+
+type T string
+
+func (t T) m(num int) bool {
+	return len(t) > num
+}
+
 func main() {
 	//b := Binary(200)
 	//s := Stringer(b)
@@ -152,5 +162,53 @@ func main() {
 	b, ok := x.(bool)
 	fmt.Println(b, ok)
 	// 将一个接口值转换成另一个接口类型
+
+	// 接口值比较
+	// 两个接口值都是 nil
+	// 两个接口值的动态类型相同且是可比较类型且动态值相同
+	var a, b1, c interface{} = "abc", 123, "a" + "b" + "c"
+	fmt.Println(a == b1) // false
+	fmt.Println(a == c)  // true
+	// 包裹了不同非接口类型的nil零值的接口值也是不相等的
+	var x1 *int = nil
+	var y *bool = nil
+	var ix interface{} = x1
+	var iy interface{} = y
+	var i2 interface{} = nil
+	fmt.Println(ix == iy) // false
+	fmt.Println(ix == i2) // false
+	fmt.Println(iy == i2) // false
+
+	var n, n1 interface{} = nil, nil
+	fmt.Println(n == n1) // true
+
+	// 不可比较类型
+	//var s []int = nil
+	//i2 = s
+	//fmt.Println(i2 == i2) // panic
+
+	// 编译器对接口值包裹指针类型有特殊优化，对于大尺寸值，应该包裹他的指针
+
+	// []T 类型的值不能被转换为 []I，即使 T 实现了 I
+	words := []string{
+		"Go", "is", "high",
+		"efficient", "language.",
+	}
+	//fmt.Print(words...) // 编译不通过
+	// 一个一个转换
+	iw := make([]interface{}, 0, len(words))
+	for _, w := range words {
+		iw = append(iw, w)
+	}
+	fmt.Println(iw...)
+
+	// 接口类型 I 声明了一个名为 m 的方法描述，编译器会隐式声明一个 I.m 的函数，该函数比 m 多一个参数
+	// 多出来的函数为 i，所以 I.m(...) == I.m(i, ...)
+
+	var i3 I = T("gopher")
+	fmt.Println(i3.m(5))
+	fmt.Println(I.m(i3, 5))
+	fmt.Println(I(nil).m(5)) // panic
+	fmt.Println(I.m(nil, 5)) // panic
 
 }
