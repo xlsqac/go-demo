@@ -1,11 +1,6 @@
 // package main
 package main
 
-import (
-	"fmt"
-	"time"
-)
-
 func main() {
 	//var c chan int
 	//var c1 chan<- int
@@ -32,21 +27,23 @@ func main() {
 		//fmt.Println(v, sentBeforeClosed)
 	}
 	{
-		var ball = make(chan string)
-		kickBall := func(playerName string) {
-			for {
-				fmt.Print(<-ball, "传球", "\n")
-				time.Sleep(time.Second)
-				ball <- playerName
-
-			}
-		}
-		go kickBall("张三")
-		go kickBall("李四")
-		go kickBall("王")
-		go kickBall("刘")
-		ball <- "裁判"    // 开球
-		var c chan bool // 一个零值nil通道
-		<-c             // 永久阻塞在此
+		//var ball = make(chan string)
+		//kickBall := func(playerName string) {
+		//	for {
+		//		fmt.Print(<-ball, "传球", "\n")
+		//		time.Sleep(time.Second)
+		//		ball <- playerName
+		//
+		//	}
+		//}
+		//go kickBall("张三")
+		//go kickBall("李四")
+		//go kickBall("王")
+		//go kickBall("刘")
+		//ball <- "裁判"    // 开球
+		//var c chan bool // 一个零值nil通道
+		//<-c             // 永久阻塞在此
+	}
+	{
 	}
 }
