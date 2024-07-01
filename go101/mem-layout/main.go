@@ -32,5 +32,4 @@ func main() {
 
 	t1 := T1{}
 	fmt.Println(unsafe.Sizeof(t1)) // 24 不是 11，因为有内存对齐保证
-	fmt.Println(i)
 }
