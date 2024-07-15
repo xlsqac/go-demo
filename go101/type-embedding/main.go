@@ -10,7 +10,6 @@ package main
 
 import (
 	"fmt"
-	"go101/type-embedding/test"
 )
 
 type IntPtr *int
@@ -67,25 +66,42 @@ type D struct {
 	C
 }
 
-type T1 struct {
-	test.T
+type Fooer interface {
+	Foo() string
+}
+type Container struct {
+	Fooer
 }
 
-type i interface {
-	open()
+func (cont Container) Foo() string {
+	fmt.Println("cont Foo")
+	return cont.Fooer.Foo()
 }
 
-type E struct {
-	y int
+// sink takes a value implementing the Fooer interface.
+func sink(f Fooer) {
+	fmt.Println("sink:", f.Foo())
 }
 
-func (e *E) open() string {
-	return "e"
+// TheRealFoo is a type that implements the Fooer interface.
+type TheRealFoo struct {
 }
 
-type F struct {
-	i
-	x string
+func (trf TheRealFoo) Foo() string {
+	return "TheRealFoo Foo"
+}
+
+type I interface {
+	M()
+	int
+}
+
+type I1 struct {
+	s string
+}
+
+func (i *I1) M() {
+	fmt.Println("M")
 }
 
 func main() {
@@ -103,8 +119,10 @@ func main() {
 
 	//t1 := T1{}
 	//fmt.Println(t1.x)
+	co := Container{Fooer: TheRealFoo{}}
+	sink(co)
 
-	f := &F{x: "f"}
-	fmt.Println(f.open())
+	i := &I1{}
+	i.M()
 
 }
