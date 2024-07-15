@@ -9,8 +9,8 @@
 package main
 
 import (
-    "fmt"
-    "go101/type-embedding/test"
+	"fmt"
+	"go101/type-embedding/test"
 )
 
 type IntPtr *int
@@ -20,8 +20,8 @@ type IntPtrAlias = *int
 type IntPtrPtrAlias = *IntPtr
 
 type AliasPtr = *struct {
-    name string
-    age  int
+	name string
+	age  int
 }
 
 type P = *bool
@@ -33,63 +33,78 @@ var x int
 
 // S 内嵌非指针类型、接口类型和指针类型
 type S struct {
-    string      // 具名非指针类型 ok
-    error       // 具名接口类型 ok
-    *int        // 无名指针类型，T int 是类型名 ok
-    P           // 无名指针类型的别名，T bool 是类型名 ok
-    M           // 无名非指针类型的别名
-    IntPtrAlias // 无名指针类型的别名，T int 是类型名
-    AliasPtr    // 无名指针类型的别名，T 是结构体 ok
+	string      // 具名非指针类型 ok
+	error       // 具名接口类型 ok
+	*int        // 无名指针类型，T int 是类型名 ok
+	P           // 无名指针类型的别名，T bool 是类型名 ok
+	M           // 无名非指针类型的别名
+	IntPtrAlias // 无名指针类型的别名，T int 是类型名
+	AliasPtr    // 无名指针类型的别名，T 是结构体 ok
 
-    //IntPtr            // 具名指针类型 error
-    //IntPtrPtrAlias    // 无名指针类型的别名，T 是指针类型 error
-    //AliasPtrInterface // 无名指针类型的别名，T 是接口类型 error
-    //x // 无名类型 error
-    // struct{} // 无名类型 error
-    //int // 类型不能重复，*int 的基类型是 int，在这里重复了 error
-    //S // 不能内嵌自己，会在定义时 error
+	//IntPtr            // 具名指针类型 error
+	//IntPtrPtrAlias    // 无名指针类型的别名，T 是指针类型 error
+	//AliasPtrInterface // 无名指针类型的别名，T 是接口类型 error
+	//x // 无名类型 error
+	// struct{} // 无名类型 error
+	//int // 类型不能重复，*int 的基类型是 int，在这里重复了 error
+	//S // 不能内嵌自己，会在定义时 error
 }
 
 type A struct {
-    x string
-    y int
+	x string
+	y int
 }
 type B struct {
-    x string
+	x string
 }
 
 type C struct {
-    A
-    B
+	A
+	B
 }
 
 type D struct {
-    C
+	C
 }
 
 type T1 struct {
-    test.T
+	test.T
 }
 
 type i interface {
-    int
-    error
+	open()
+}
+
+type E struct {
+	y int
+}
+
+func (e *E) open() string {
+	return "e"
+}
+
+type F struct {
+	i
+	x string
 }
 
 func main() {
-    var s S
-    // string 是内嵌的，隐式字段名就是类型名
-    s.string = "ok"
-    //s.test = "ok"
+	var s S
+	// string 是内嵌的，隐式字段名就是类型名
+	s.string = "ok"
+	//s.test = "ok"
 
-    c := C{A: A{x: "a", y: 1}, B: B{x: "b"}}
-    d := D{C: c}
-    //fmt.Println(c.x)
-    fmt.Println(c.A.x)
-    fmt.Println(c.B.x)
-    fmt.Println(d.y)
+	c := C{A: A{x: "a", y: 1}, B: B{x: "b"}}
+	d := D{C: c}
+	//fmt.Println(c.x)
+	fmt.Println(c.A.x)
+	fmt.Println(c.B.x)
+	fmt.Println(d.y)
 
-    t1 := T1{}
-    fmt.Println(t1.x)
+	//t1 := T1{}
+	//fmt.Println(t1.x)
+
+	f := &F{x: "f"}
+	fmt.Println(f.open())
 
 }
