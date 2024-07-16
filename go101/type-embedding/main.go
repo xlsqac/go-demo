@@ -73,6 +73,13 @@ type Container struct {
 	Fooer
 }
 
+type T1 struct {
+	test.T
+}
+type HelloWorld interface {
+	hello()
+}
+
 func (cont Container) Foo() string {
 	fmt.Println("cont Foo")
 	return cont.Fooer.Foo()
@@ -104,6 +111,34 @@ func (i *I1) M() {
 	fmt.Println("M")
 }
 
+type i interface {
+	int
+	error
+}
+type HelloWorld1 interface {
+	hello()
+	*hello //ok
+	int    // error 没有 int 类型实现这个接口，但是又增加了 int 类型的约束，所以基于此的泛型函数是调用不了的
+}
+
+type Person struct {
+	name string
+	HelloWorld
+}
+
+func Print[T HelloWorld1](s []T) {
+	for _, v := range s {
+		fmt.Println(v)
+	}
+}
+
+type hello struct {
+}
+
+func (h *hello) hello() {
+	fmt.Println("hello")
+}
+
 func main() {
 	var s S
 	// string 是内嵌的，隐式字段名就是类型名
@@ -124,5 +159,15 @@ func main() {
 
 	i := &I1{}
 	i.M()
+	t1 := T1{}
+	fmt.Println(t1.x)
+	//t1 := T1{}
+	//fmt.Println(t1.x)
+	h := &hello{}
+	p := &Person{"claude", h}
+	p.hello()
+	p.HelloWorld.hello()
 
+	slice := []*hello{h}
+	Print(slice)
 }
