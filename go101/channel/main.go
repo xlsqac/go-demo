@@ -1,6 +1,11 @@
 // package main
 package main
 
+import (
+	"fmt"
+	"time"
+)
+
 func main() {
 	//var c chan int
 	//var c1 chan<- int
@@ -45,5 +50,26 @@ func main() {
 		//<-c             // 永久阻塞在此
 	}
 	{
+		c := make(chan int, 2)
+		go func(){
+			c <- 1
+			fmt.Println("send 1 end")
+		}()
+		
+		time.Sleep(time.Second)
+		go func(){
+			c <- 2
+			fmt.Println("send 2 end")
+		}()
+		time.Sleep(time.Second)
+		go func(){
+			c <- 3
+			fmt.Println("send 3 end")
+		}()
+		time.Sleep(time.Second)
+
+		v := <- c
+		fmt.Println(v)
+		time.Sleep(time.Second)
 	}
 }
