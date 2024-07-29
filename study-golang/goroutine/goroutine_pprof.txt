@@ -1,0 +1,9 @@
+goroutine profile: total 1
+1 @ 0xfe13bf1 0xfe4647d 0xfe90091 0xfe8fec5 0xfe8cceb 0xfe9a0db 0xfe1cdfd 0xfe4b0a1
+#	0xfe4647c	runtime/pprof.runtime_goroutineProfileWithLabels+0x1c	/usr/local/go/src/runtime/mprof.go:1079
+#	0xfe90090	runtime/pprof.writeRuntimeProfile+0xb0			/usr/local/go/src/runtime/pprof/pprof.go:774
+#	0xfe8fec4	runtime/pprof.writeGoroutine+0x44			/usr/local/go/src/runtime/pprof/pprof.go:734
+#	0xfe8ccea	runtime/pprof.(*Profile).WriteTo+0x14a			/usr/local/go/src/runtime/pprof/pprof.go:369
+#	0xfe9a0da	main.main+0x19a						/Users/xlsqac/Code/go/src/study-golang/goroutine/main.go:23
+#	0xfe1cdfc	runtime.main+0x29c					/usr/local/go/src/runtime/proc.go:271
+
