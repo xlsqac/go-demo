@@ -4,6 +4,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"sync"
 	"sync/atomic"
@@ -35,13 +36,13 @@ type GoroutinePools struct {
 	sync.Mutex // 内嵌一个锁，保证添加任务时的同步安全
 }
 
-// getPoolCapacity 获取容量
-func (p *GoroutinePools) getPoolCapacity() uint64 {
+// GetPoolCapacity 获取容量
+func (p *GoroutinePools) GetPoolCapacity() uint64 {
 	return p.capacity
 }
 
-// getWorkerNum 获取任务数
-func (p *GoroutinePools) getWorkerNum() uint64 {
+// GetWorkerNum 获取任务数
+func (p *GoroutinePools) GetWorkerNum() uint64 {
 	return atomic.LoadUint64(&p.workerNum)
 }
 
@@ -52,11 +53,11 @@ func (p *GoroutinePools) addNewWorker() {
 
 // decWorker 减少一个任务数
 func (p *GoroutinePools) decWorker() {
-	atomic.AddUint64(&p.workerNum, -1)
+	atomic.AddUint64(&p.workerNum, ^uint64(0))
 }
 
-// getPoolStatus 获取池子状态
-func (p *GoroutinePools) getPoolStatus() uint64 {
+// GetPoolStatus 获取池子状态
+func (p *GoroutinePools) GetPoolStatus() uint64 {
 	return atomic.LoadUint64(&p.status)
 }
 
@@ -95,14 +96,14 @@ func (p *GoroutinePools) newTaskGoroutine() {
 	}()
 }
 
-// newTask 新建一个任务，需要加锁，池子的状态得是 RUNNING
+// NewTask 新建一个任务，需要加锁，池子的状态得是 RUNNING
 // 如果当前的任务数小于池子容量，可以添加任务
-func (p *GoroutinePools) newTask(t *Task) error {
+func (p *GoroutinePools) NewTask(t *Task) error {
 	p.Lock()
 	defer p.Unlock()
 
-	if p.getPoolStatus() == RUNNING {
-		if p.getPoolCapacity() > p.getWorkerNum() {
+	if p.GetPoolStatus() == RUNNING {
+		if p.GetPoolCapacity() > p.GetWorkerNum() {
 			p.newTaskGoroutine()
 		}
 		p.taskChan <- t
@@ -113,8 +114,8 @@ func (p *GoroutinePools) newTask(t *Task) error {
 
 }
 
-// closePool 关闭协程池，改变池子状态并且通道中的任务数为 0 时关闭通道。
-func (p *GoroutinePools) closePool() {
+// ClosePool 关闭协程池，改变池子状态并且通道中的任务数为 0 时关闭通道。
+func (p *GoroutinePools) ClosePool() {
 	p.setPoolStatus(STOP)
 	for len(p.taskChan) > 0 {
 		time.Sleep(time.Second * 60)
@@ -122,5 +123,23 @@ func (p *GoroutinePools) closePool() {
 	close(p.taskChan)
 }
 
-// main 测试一下协程池是否能正常工作 TODO
-func main() {}
+func testPool(params ...any) {
+	a := params[0]
+	b := params[1]
+	fmt.Println(a.(int) + b.(int))
+}
+
+// main 测试一下协程池是否能正常工作
+func main() {
+	f := testPool
+	a := 1
+	b := 2
+
+	t := &Task{Params: []any{a, b}, Handler: f}
+	ct := make(chan *Task)
+	pool := &GoroutinePools{capacity: 1000, workerNum: 0, status: 0, taskChan: ct}
+	err := pool.NewTask(t)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
