@@ -18,7 +18,7 @@ func main() {
 }
 
 func fooHandler(w http.ResponseWriter, _ *http.Request) {
-	fmt.Println("connent", time.Now())
+	fmt.Println("connect", time.Now())
 	time.Sleep(time.Second * 2)
 	fmt.Fprintf(w, "Hello, %q", "ok")
 }
