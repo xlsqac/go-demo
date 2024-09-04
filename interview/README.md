@@ -6,3 +6,12 @@ goroutine: 协程相关
 
     2.pool. 实现一个协程池
 
+algo: 算法
+
+map: map 相关
+
+slice: 切片相关
+
+waitgroup: sync.WaitGroup 相关
+
+template: 一个模板
