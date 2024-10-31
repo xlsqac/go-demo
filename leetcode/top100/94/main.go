@@ -1,6 +1,7 @@
 // package main
 // https://leetcode.cn/problems/binary-tree-inorder-traversal/?envType=study-plan-v2&envId=top-100-liked
 // 二叉树的中序遍历
+// 中序遍历是深度优先遍历（dfs）的一种，体现为从左往右遍历
 package main
 
 import "fmt"
