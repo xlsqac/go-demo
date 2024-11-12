@@ -41,8 +41,10 @@ func main() {
 	}
 }
 
-// diameterOfBinaryTree 计算二叉树的直径
-// 直径可以看作是左儿子为根的子树的深度 + 右儿子为根的子树的深度 + 1，1可以理解为根节点本身
+// diameterOfBinaryTree 返回二叉树的直径
+// 时间复杂度 O(N)
+// 直径：树中任意两个节点的路径长度
+// 左子树的深度 + 右子树的深度 +1
 func diameterOfBinaryTree(root *TreeNode) int {
 	var dfs func(*TreeNode) int
 	ans := 0
@@ -53,14 +55,14 @@ func diameterOfBinaryTree(root *TreeNode) int {
 			return 0
 		}
 		// 左儿子为根的子树的深度
-		lLen := dfs(node.Left)
+		lLen := dfs(node.Left) // 1 2 4 nil return 0
 		// 右儿子为根的子树的深度
-		rLen := dfs(node.Right)
+		rLen := dfs(node.Right) // nil(4) return 0
 		// 计算深度的最大值
-		ans = max(ans, lLen+rLen)
+		ans = max(ans, lLen+rLen) // 0
 		// 返回节点的深度，左右子树深度的最大值 + 1
 		// 这个结果经过 return 后，会作为左儿子或右儿子为根的子树的深度
-		return max(lLen, rLen) + 1
+		return max(lLen, rLen) + 1 // 1(4)
 	}
 	dfs(root)
 	return ans
