@@ -93,5 +93,4 @@ func longestConsecutiveMap(nums []int) int {
 		}
 	}
 	return maxLongestConsecutiveNum
-
 }
